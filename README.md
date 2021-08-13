@@ -23,3 +23,12 @@ the Dash components installed:
     pip install -r requirements.txt
 
 Now you can open the `Dash_applications` folder as a project in the PyCharm IDE.
+
+## Deployment
+Log on to the server and switch to the root user by typing `sudo -s`.
+Then, `cd` to the `/srv/Dash_applications` directory and run the following
+commands to update the deployed Dash apps:
+
+    git pull
+    docker-compose build
+    docker-compose up -d
