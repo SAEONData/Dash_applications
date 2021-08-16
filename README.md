@@ -14,11 +14,20 @@ Switch to the `Dash_applications` directory:
 
     cd Dash_applications/
 
-Run the following commands to create a Python virtual environment with
-the Dash components installed:
+Create a Python virtual environment:
 
-    python3 -m venv .venv
+    python -m venv .venv
+
+Activate the virtual Environment:
+
+#### On Windows
+    .venv\Scripts\activate
+    
+#### On Linux
     source .venv/bin/activate
+
+Install Dash and other packages to the Virtual Environment  
+    
     pip install -U pip setuptools pip-tools
     pip install -r requirements.txt
 
