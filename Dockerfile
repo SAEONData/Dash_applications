@@ -1,7 +1,7 @@
 FROM python:3.9
 
 WORKDIR /srv
-COPY index.py requirements.txt ./
+COPY app.py index.py requirements.txt ./
 COPY apps apps/
 COPY Data Data/
 RUN pip install -r requirements.txt

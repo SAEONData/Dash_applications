@@ -1,13 +1,15 @@
+import pathlib
+
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.express as px
 import pandas as pd
 
-from index import app
+from app import app
 
 # import Data into a .csv
-csv_path = 'Data/dataframe.csv'
+csv_path = pathlib.Path(__file__).parent.parent / 'Data' / 'dataframe.csv'
 df = pd.read_csv(csv_path)
 
 # list the variables we want to display

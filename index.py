@@ -1,11 +1,10 @@
-import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+from app import app
+from apps import app1, app2
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
 server = app.server
 
 app.layout = html.Div([
@@ -17,8 +16,6 @@ app.layout = html.Div([
 @app.callback(Output('page-content', 'children'),
               Input('url', 'pathname'))
 def display_page(pathname):
-    from apps import app1, app2
-
     if pathname == '/apps/app1':
         return app1.layout
     elif pathname == '/apps/app2':
