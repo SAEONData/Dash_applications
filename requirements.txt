@@ -16,7 +16,7 @@ dash-html-components==1.1.4
     # via dash
 dash-table==4.12.0
     # via dash
-dataclasses==0.8
+dataclasses==0.6
     # via werkzeug
 flask==2.0.1
     # via
