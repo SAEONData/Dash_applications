@@ -4,7 +4,6 @@ import pandas as pd
 import plotly.express as px
 import dash_core_components as dcc
 import dash_html_components as html
-from app import app
 
 with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
     counties = json.load(response)

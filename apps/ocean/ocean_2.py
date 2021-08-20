@@ -2,12 +2,6 @@ import plotly.graph_objects as go
 import numpy as np
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
-import plotly.express as px
-import pandas as pd
-
-from app import app
-
 
 z1 = np.array([
     [8.83,8.89,8.81,8.87,8.9,8.87],
