@@ -24,7 +24,7 @@ layout = html.Div([
 
 
 @app.callback(
-	Output('graph-with-slider', 'figure'),
+	Output('marc_graph-with-slider', 'figure'),
 	Input('year-slider', 'value'))
 
 def update_figure(selected_year):
