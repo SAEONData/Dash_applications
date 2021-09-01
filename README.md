@@ -33,6 +33,8 @@ Install Dash and other packages to the Virtual Environment
 
 Now you can open the `Dash_applications` folder as a project in the PyCharm IDE.
 
+Note: @app.callback outputs must have a unique name for each app
+
 ### Managing dependencies
 The `requirements.txt` file defines exactly which packages - and which versions
 of those packages - must be installed to the Python virtual environment, for both
