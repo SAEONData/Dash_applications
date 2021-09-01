@@ -23,7 +23,7 @@ Activate the virtual Environment:
 #### On Windows
     .venv\Scripts\activate
     
-#### On Linux
+#### On Linux and mac
     source .venv/bin/activate
 
 Install Dash and other packages to the Virtual Environment  
