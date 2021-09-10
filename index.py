@@ -1,17 +1,21 @@
-import pathlib
 import importlib
 import os
+import pathlib
+
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-#initialise the Dash app
 from app import app
+from apps.contents import contents
 
-#create a pathlist for the various dash apps
+# expose the Flask instance for the HTTP server (gunicorn)
+server = app.server
+
+# create a pathlist for the various dash apps
 file_path = pathlib.Path(__file__).parent / 'apps'
 
-#Scan through the apps directory and find all the dash apps
+# Scan through the apps directory and find all the dash apps
 projlist = []
 modlist = []
 
@@ -20,28 +24,19 @@ for dir_, _, files in os.walk(file_path):
         if file_name.endswith(".py"):
             if file_name.endswith("__init__.py"):
                 pass
-            #add them to the lists
+            # add them to the lists
             elif file_name.endswith(".py"):
                 rel_dir = os.path.relpath(dir_, file_path)
                 projlist.append(rel_dir)
                 name = file_name[:-3]
                 modlist.append(name)
-                #import them as modules
-                try:
-                    exec("from apps.{m} import {n}".format(m=rel_dir, n=name))
-                except Exception as e:
-                    print(e)
 
-#Create a dictionary for the relative paths to be used in the url
+# Import app modules and map them to URL paths
 path_module_mapping = {}
 for i in range(len(projlist)):
-    path_module_mapping['/apps/' + projlist[i] + '/' + modlist[i]] = importlib.import_module('apps.'+ projlist[i] + '.' + modlist[i])
+    path_module_mapping['/apps/' + projlist[i] + '/' + modlist[i]] = importlib.import_module('apps.' + projlist[i] + '.' + modlist[i])
 
-
-#Start the Flask Server
-server = app.server
-
-#Build the layout of the index page
+# Build the layout of the index page
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Div(id='page-content')
@@ -52,7 +47,7 @@ app.layout = html.Div([
               Input('url', 'pathname'))
 def display_page(pathname):
     if pathname == '/':
-        return (contents.layout)
+        return contents.layout
     else:
         try:
             module = path_module_mapping[pathname]
@@ -60,5 +55,7 @@ def display_page(pathname):
         except KeyError:
             return '404'
 
+
 if __name__ == '__main__':
+    # Start the Flask server for local development
     app.run_server(debug=True)
