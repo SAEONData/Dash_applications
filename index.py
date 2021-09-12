@@ -48,12 +48,11 @@ app.layout = html.Div([
 def display_page(pathname):
     if pathname == '/':
         return contents.layout
-    else:
-        try:
-            module = path_module_mapping[pathname]
-            return module.layout
-        except KeyError:
-            return '404'
+    try:
+        module = path_module_mapping[pathname]
+        return module.layout
+    except KeyError:
+        return '404'
 
 
 if __name__ == '__main__':
