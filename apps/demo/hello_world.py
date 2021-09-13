@@ -9,11 +9,12 @@ data = {
     2: 'Two',
     3: 'Three',
     4: 'Four',
+    5: 'Five'
 }
 
 layout = html.Div([
     html.H1('Hello World!'),
-    dcc.Slider(id='demo-slider', min=1, max=4, value=1),
+    dcc.Slider(id='demo-slider', min=1, max=5, value=1),
     html.H3(data[1], id='demo-text')
 ])
 
