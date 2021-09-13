@@ -7,12 +7,13 @@ from app import app
 data = {
     1: 'One',
     2: 'Two',
-    3: 'Three'
+    3: 'Three',
+    4: 'Four'
 }
 
 layout = html.Div([
     html.H1('Hello World!'),
-    dcc.Slider(id='demo-slider', min=1, max=3, value=1),
+    dcc.Slider(id='demo-slider', min=1, max=4, value=1),
     html.H3(data[1], id='demo-text')
 ])
 
