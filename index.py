@@ -24,6 +24,8 @@ for dir_, _, files in os.walk(file_path):
         if file_name.endswith(".py"):
             if file_name.endswith("__init__.py"):
                 pass
+            elif file_name.endswith("Ocean_Data_Loader.py"):
+                pass
             # add them to the lists
             elif file_name.endswith(".py"):
                 rel_dir = os.path.relpath(dir_, file_path)
