@@ -1,0 +1,77 @@
+/*Sarva Colours
+    colour-1: #051D3F;
+    colour-2: #041D40;
+    colour-3: #004B87;
+    colour-4: #0073C0;
+    colour-5: #FF3818;
+    colour-6: #FF7D23;
+    colour-7: #1D953E;
+    colour-8: #6CC247;
+    colour-9: #F4F4F4;
+    colour-10: #C6CFD4;
+*/
+.bodyFont{
+    color: #636566;
+    font-family: Roboto;}
+
+.headerFont{
+    color: #636566;
+    font-family: helvetica;}
+
+.captionFont {
+    color: #FFFFFF;
+    font-family: helvetica; }
+
+.drop{
+    width: 100%;}
+
+.slider{
+    width: 100%}
+
+.box{
+    border-style: solid;
+    border-color: #051D3F;
+    border-width: 1px;
+    border-radius: 5px;
+    background-color: #F4F4F4;
+    margin: 1vh;
+    padding: 1vh;
+    }
+    
+.headerbox{
+    border-style: solid;
+    border-color: #051D3F;
+    border-width: 1px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    }
+
+.sliderbox{
+    border-style: solid;
+    border-color: #051D3F;
+    border-width: 1px;
+    border-radius: 5px;
+    background-color: #F4F4F4;
+    margin: 1vh;
+    padding-bottom: 3vh;
+    }
+
+.backdrop{
+    background-color: #051D3F;}
+
+.logo{
+    margin: 5px;
+    width: 12vw;
+    vertical-align: bottom; 
+    }
+
+.button{
+    color: #FFFFFF;
+    background-color: #0073C0;
+    border-style: solid;
+    border-color: #0073C0;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 1vh;
+    margin: 1vh}
+
