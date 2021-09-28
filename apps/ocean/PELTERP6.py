@@ -111,7 +111,7 @@ def set_dates(selected_season):
     flat_list.sort(key=lambda date: datetime.strptime(date, '%Y-%m-%d'))
 
     def listToDict(lst):
-        op = {i: dict(label=lst[i], style={'transform': 'rotate(-45deg)',
+        op = {i: dict(label=lst[i], style={'transform': 'rotate(45deg)',
                                            'alignItems': 'left',
                                            'paddingTop': '1vh'}) for i in range(0, len(lst))}
         return op
