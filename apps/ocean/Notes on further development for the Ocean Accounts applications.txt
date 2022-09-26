@@ -1,0 +1,8 @@
+The applications that run from the ocean accounts Dash app are currently set to embed within an ESRI app that was developed for the ocean accounts project website.
+the website is being developed by Erika Brown erikabrown.gissa@gmail.com. she has some ideas about how she wants the information in these Dash apps to be displayed on the website,
+Currently, the only work that needs to happen is that the download button needs to be removed from the Dash app.
+Future work may include adding styling or additional data to the existing app.
+
+--- On the topic of adding additional Data ----
+In this Repo, the Notebook Ocean Accounts version2.ipynb contains the processing pipeline that was developed for importing and converting Seabird CNV files into pandas data frames
+for data analysis
