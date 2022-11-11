@@ -4,13 +4,20 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.express as px
 import pandas as pd
+#import path
 
+#directory = path.path(__file__).abspath()
+#directory = pathlib.Path(__file__).parent.parent
+#print(directory)
+#from directory.app import app
 from app import app
-
-# import Data into a .csv
+#
+## import Data into a .csv
 csv_path = pathlib.Path(__file__).parent / 'Data' / 'dataframe.csv'
+#print(csv_path)
 df = pd.read_csv(csv_path)
-
+#print(df)
+#
 # list the variables we want to display
 sensor_list = ['Conductivity', 'Temperature', 'Salinity', 'Oxygen', 'pH', 'Chlorophyll', 'Turbidity', 'Pressure']
 
@@ -72,9 +79,9 @@ layout = html.Div([
 @app.callback(
     Output('graph', 'figure'),
     [Input("var-dropdown", "value"),
-     Input("stat-dropdown", "value"),
-     Input("slider", "value")
-     ])
+        Input("stat-dropdown", "value"),
+        Input("slider", "value")
+    ])
 # define the function to update the graph based on the user selection
 def update_figure(input1, input2, input3):
     # Filter the Data by station
@@ -99,3 +106,5 @@ def update_figure(input1, input2, input3):
 )
 def display_value(input1, input2):
     return 'the variable being displayed in the chart is "{}"'.format(input1) + ' for the station "{}"'.format(input2)
+
+

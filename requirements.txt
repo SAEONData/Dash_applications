@@ -4,65 +4,67 @@
 #
 #    pip-compile
 #
-brotli==1.0.9
-    # via flask-compress
-click==8.0.1
-    # via flask
-colorama==0.4.4
-    # via click
-dash==1.21.0
+click==8.1.3
+    # via
+    #   flask
+    #   geobuf
+dash==2.7.0
     # via
     #   -r requirements.in
     #   dash-bootstrap-components
-dash-bootstrap-components==0.13.1
+dash-bootstrap-components==1.2.1
     # via -r requirements.in
-dash-core-components==1.17.1
+dash-core-components==2.0.0
     # via dash
-dash-html-components==1.1.4
+dash-html-components==2.0.0
     # via dash
-dash-table==4.12.0
+dash-leaflet==0.1.23
+    # via -r requirements.in
+dash-table==5.0.0
     # via dash
-flask==2.0.1
-    # via
-    #   dash
-    #   flask-compress
-flask-compress==1.10.1
+flask==2.2.2
     # via dash
-future==0.18.2
-    # via dash
+geobuf==1.1.1
+    # via dash-leaflet
 gunicorn==20.1.0
     # via -r requirements.in
-importlib-metadata==4.6.4
-    # via click
-itsdangerous==2.0.1
+importlib-metadata==5.0.0
+    # via
+    #   click
+    #   flask
+itsdangerous==2.1.2
     # via flask
-jinja2==3.0.1
+jinja2==3.1.2
     # via flask
-markupsafe==2.0.1
-    # via jinja2
-numpy==1.19.5
+markupsafe==2.1.1
+    # via
+    #   jinja2
+    #   werkzeug
+numpy==1.21.6
     # via pandas
-pandas==1.1.5
+pandas==1.3.5
     # via -r requirements.in
-plotly==5.2.1
+plotly==5.11.0
     # via
     #   -r requirements.in
     #   dash
+protobuf==4.21.9
+    # via geobuf
 python-dateutil==2.8.2
     # via pandas
-pytz==2021.1
+pytz==2022.6
     # via pandas
 six==1.16.0
     # via
-    #   plotly
+    #   geobuf
     #   python-dateutil
-tenacity==8.0.1
+tenacity==8.1.0
     # via plotly
-typing-extensions==3.10.0.0
+typing-extensions==4.4.0
     # via importlib-metadata
-werkzeug==2.0.1
+werkzeug==2.2.2
     # via flask
-zipp==3.5.0
+zipp==3.10.0
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
