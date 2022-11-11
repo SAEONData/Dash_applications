@@ -3,4 +3,4 @@ dash-bootstrap-components
 gunicorn
 pandas
 plotly
-
+dash_leaflet

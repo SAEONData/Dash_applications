@@ -201,3 +201,5 @@ def display_value(input1):
 )
 def func(n_clicks):
     return dcc.send_data_frame(df.to_csv, "SAEON_AlgoaBay_CTD" + station + ".csv")
+if __name__ == '__main__':
+    app.run_server(debug=True)
