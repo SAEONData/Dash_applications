@@ -7,8 +7,8 @@ import pandas as pd
 #import path
 
 #directory = path.path(__file__).abspath()
-directory = pathlib.Path(__file__).parent.parent
-print(directory)
+#directory = pathlib.Path(__file__).parent.parent
+#print(directory)
 #from directory.app import app
 from app import app
 #
