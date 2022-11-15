@@ -4,3 +4,4 @@ gunicorn
 pandas
 plotly
 dash_leaflet
+dash_extensions
