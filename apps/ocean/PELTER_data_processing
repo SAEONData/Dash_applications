@@ -1,0 +1,188 @@
+import numpy as np
+import math
+import pandas as pd
+import glob
+import os
+import pycnv
+
+import datetime
+#import datetime
+
+
+def jdtodatestd (year,jdate):
+	dn=[str(year) + str(jdate)]
+	date_new = float(''.join(dn))    
+	fmt = '%Y%j'
+	h=24*(jdate-int(jdate))
+	m=60*(h-int(h))
+	s=60*(m-int(m))
+	d = datetime.datetime.strptime(str(int(date_new)), fmt).date()
+	b = datetime.datetime(d.year, d.month, d.day, int(h),int(m),int(s))    
+	return(b)
+
+def jdtodatestd2 (year):
+	b = datetime.datetime(int(str(year)[0:4]), int(str(year)[4:6]), int(str(year)[6:8]), 0,0,0)    
+	return(b)
+
+
+
+
+pelter1_files=[]
+	
+for root, dirs, files in os.walk(r"/Users/privateprivate/Downloads/ColabNotebooks/AlgoaBaySentinelSiteData/PELTER_CTD/"):
+	for file in files:
+		if file.endswith(".cnv"):
+			if "PELTER6" in str(file):
+				pelter1_files.append(os.path.join(root, file))
+
+pelter1_files=sorted(pelter1_files)
+
+# name 0 = c0uS/cm: Conductivity [uS/cm]
+# name 1 = tv290C: Temperature [ITS-90, deg C]
+# name 2 = depSM: Depth [salt water, m], lat = -34.00
+# name 3 = sal00: Salinity, Practical [PSU]
+# name 4 = sbeox0Mg/L: Oxygen, SBE 43 [mg/l]
+# name 5 = ph: pH
+# name 6 = chloroflTC0: Chlorophyll, Turner Cyclops [ug/l]
+# name 7 = turbflTC0: Turbidity, Turner Cyclops [NTU]
+# name 8 = nbf: Bottles Fired
+# name 9 = timeJ: Julian Days
+# name 10 = scan: Scan Count
+# name 11 = flag:  0.000e+00
+
+df = pd.DataFrame({'Date':[],'Conductivity [uS/cm]':[],'Temperature [ITS-90 deg C]':[],'Depth [salt water m]':[],'Salinity, Practical [PSU]':[], 'Oxygen (SBE 43) [mg/l]':[],'pH [pH]':[], 'Chlorophyll (Turner Cyclops) [ug/l]':[], 'Turbidity (Turner Cyclops) [NTU]':[], 'Bottles Fired [n]':[], 'Julian Days [timeJ]':[], 'Scan Count [scan]':[], 'flag [flag]':[],'file [file]':[]})
+
+
+
+
+fname=pelter1_files[0]
+
+
+cnv = pycnv.pycnv(fname)
+
+df['Conductivity [uS/cm]'] = cnv.data['c0uS/cm'].tolist()
+df['Temperature [ITS-90 deg C]'] = cnv.data['tv290C'].tolist()
+df['Depth [salt water m]'] = cnv.data['depSM'].tolist()
+df['Salinity, Practical [PSU]'] = cnv.data['sal00'].tolist()
+df['Oxygen (SBE 43) [mg/l]'] = cnv.data['sbeox0Mg/L'].tolist()
+df['pH [pH]'] = cnv.data['ph'].tolist()
+df['Chlorophyll (Turner Cyclops) [ug/l]'] = cnv.data['chloroflTC0'].tolist()
+df['Turbidity (Turner Cyclops) [NTU]'] = cnv.data['turbflTC0'].tolist()
+df['Bottles Fired [n]'] = cnv.data['nbf'].tolist()
+df['Julian Days [timeJ]'] = cnv.data['timeJ'].tolist()
+df['Scan Count [scan]'] = cnv.data['scan'].tolist()
+df['flag [flag]'] = cnv.data['flag'].tolist()
+df['file [file]'] = os.path.basename(fname)
+
+year=cnv.date.year
+datestamp=[]
+for i in df['Julian Days [timeJ]']:
+	datestamp.append(str(jdtodatestd(year,i)))
+df['Date']=datestamp
+
+
+for ifile in range(1,len(pelter1_files)):
+	
+	
+	
+	
+	
+	df2 = pd.DataFrame({'Date':[],'Conductivity [uS/cm]':[],'Temperature [ITS-90 deg C]':[],'Depth [salt water m]':[],'Salinity, Practical [PSU]':[], 'Oxygen (SBE 43) [mg/l]':[],'pH [pH]':[], 'Chlorophyll (Turner Cyclops) [ug/l]':[], 'Turbidity (Turner Cyclops) [NTU]':[], 'Bottles Fired [n]':[], 'Julian Days [timeJ]':[], 'Scan Count [scan]':[], 'flag [flag]':[],'file [file]':[]})
+	fname=pelter1_files[ifile]
+	cnv = pycnv.pycnv(fname)
+	try:
+		df2['Conductivity [uS/cm]'] = cnv.data['c0uS/cm'].tolist()
+	except:
+		pass
+	try:		
+		df2['Temperature [ITS-90 deg C]'] = cnv.data['tv290C'].tolist()
+	except:
+		pass
+	try:
+		df2['Depth [salt water m]'] = cnv.data['depSM'].tolist()
+	except:
+		pass
+	try:
+		df2['Salinity, Practical [PSU]'] = cnv.data['sal00'].tolist()
+	except:
+		pass
+	try:
+		df2['Oxygen (SBE 43) [mg/l]'] = cnv.data['sbeox0Mg/L'].tolist()
+	except:
+		pass
+	try:
+		df2['pH [pH]'] = cnv.data['ph'].tolist()
+	except:
+		pass
+	try:
+		df2['Chlorophyll (Turner Cyclops) [ug/l]'] = cnv.data['chloroflTC0'].tolist()
+	except:
+		pass
+	try:
+		df2['Turbidity (Turner Cyclops) [NTU]'] = cnv.data['turbflTC0'].tolist()
+	except:
+		pass
+	try:
+		df2['Bottles Fired [n]'] = cnv.data['nbf'].tolist()
+	except:
+		pass
+	try:
+		df2['Julian Days [timeJ]'] = cnv.data['timeJ'].tolist()
+	except:
+		pass
+	try:
+		df2['Scan Count [scan]'] = cnv.data['scan'].tolist()
+	except:
+		pass
+	try:
+		df2['flag [flag]'] = cnv.data['flag'].tolist()
+	except:
+		pass
+	year2 = fname.split('_')[4]
+	try:
+		year=cnv.date.year
+		
+#		print(fname, date2[0:4])
+		datestamp=[]
+		for i in df2['Julian Days [timeJ]']:
+			datestamp.append(str(jdtodatestd(year,i)))
+		df2['Date']=datestamp
+	except:
+		for i in range(0,len(df2)):
+			datestamp.append(str(jdtodatestd2(year2)))
+		df2['Date']=datestamp
+	df2['file [file]'] = os.path.basename(fname)
+	frames = [df, df2]
+#	df.append(df2)
+	df = pd.concat(frames, axis=0)
+	print(ifile, len(pelter1_files))
+
+df.to_csv('/Users/privateprivate/SAEON/Ocean_Accounts/pelter6.csv',index=False, sep=",")
+
+
+
+
+
+
+
+
+
+
+
+##df['Date'] = cnv.data['flag'].tolist()
+#for i in df['Julian Days [timeJ]']:
+#	print(i-int(i))
+
+#key0 = list(cnv.data.keys())[0]#temp
+#data = cnv.data[key0]
+#df=pd.DataFrame(data.tolist())
+#df.columns = [str(cnv.units[key0])]
+#
+#print(df)
+#for file in pelter1_files:
+#	fname=file
+##
+#	cnv = pycnv.pycnv(fname)
+#
+#(1/24)*3.6
+	

@@ -3,14 +3,6 @@ import pathlib
 
 #Set the path to the data we want
 csv_path = pathlib.Path(__file__).parent / 'dataframe.csv'
-
-#Create the DataFrame
-df= pd.read_csv(csv_path)
-
-#Process data to remove errors
-df['date'] = df['date'].replace('201900809', '20190809')
-df['date'] = pd.to_datetime(df.date, format='%Y%m%d').dt.date
-
 #classify according to season
 def f(row):
     if row['date'].month in range(3, 6):
@@ -23,11 +15,16 @@ def f(row):
         val = 'summer'
     return val
 
-df['season'] = df.apply(f, axis=1)
-
-seasons = df['season'].unique()
-season = {}
-for i in seasons:
-    subset = (df.loc[(df['season'] == i)]['date'].unique())
-    season[i] = [str(x) for x in subset]
-
+def create_df():
+    #Create the DataFrame
+    df= pd.read_csv(csv_path)
+    #Process data to remove errors
+    df['date'] = df['date'].replace('201900809', '20190809')
+    df['date'] = pd.to_datetime(df.date, format='%Y%m%d').dt.date
+    df['season'] = df.apply(f, axis=1)
+    seasons = df['season'].unique()
+    season = {}
+    for i in seasons:
+        subset = (df.loc[(df['season'] == i)]['date'].unique())
+        season[i] = [str(x) for x in subset]
+    return df,seasons

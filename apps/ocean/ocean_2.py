@@ -105,28 +105,28 @@ def capital_click(feature):
 	try:
 		#       if feature is not None:
 		if triggered[0]['value']['properties']['name'] == 'PELTERP1':
-			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTERP1",
+			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTER",
 	style=style2)
 		elif triggered[0]['value']['properties']['name'] == 'PELTERP2':
-			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTERP2",
+			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTER",
 		style=style2)
 		elif triggered[0]['value']['properties']['name'] == 'PELTERP3':
-			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTERP3",
+			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTER",
 		style=style2)
 		elif triggered[0]['value']['properties']['name'] == 'PELTERP4':
-			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTERP4",
+			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTER",
 		style=style2)
 		elif triggered[0]['value']['properties']['name'] == 'PELTERP5':
-			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTERP5",
+			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTER",
 		style=style2)
 		elif triggered[0]['value']['properties']['name'] == 'PELTERP6':
-			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTERP6",
+			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTER",
 		style=style2)
 		elif triggered[0]['value']['properties']['name'] == 'PELTERP7':
-			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTERP7",
+			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTER",
 		style=style2)
 		elif triggered[0]['value']['properties']['name'] == 'PELTERP8':
-			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTERP8",
+			return html.Iframe(src="https://dash.saeon.ac.za/apps/ocean/PELTER",
 		style=style2)
 		else:
 			return

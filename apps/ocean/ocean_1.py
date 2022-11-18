@@ -1,6 +1,5 @@
 import pathlib
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
 import pandas as pd
@@ -108,3 +107,4 @@ def display_value(input1, input2):
     return 'the variable being displayed in the chart is "{}"'.format(input1) + ' for the station "{}"'.format(input2)
 
 
+    

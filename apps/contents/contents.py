@@ -1,6 +1,6 @@
 import pathlib
 import os
-import dash_html_components as html
+from dash import dcc, html
 
 app_list = []
 
