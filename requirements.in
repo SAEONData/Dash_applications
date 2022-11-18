@@ -5,3 +5,5 @@ pandas
 plotly
 dash_leaflet
 dash_extensions
+datashader
+pyarrow
