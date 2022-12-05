@@ -32,7 +32,7 @@ pelter1_files=[]
 for root, dirs, files in os.walk(r"/Users/privateprivate/Downloads/ColabNotebooks/AlgoaBaySentinelSiteData/PELTER_CTD/"):
 	for file in files:
 		if file.endswith(".cnv"):
-			if "PELTER6" in str(file):
+			if "PELTER8" in str(file):
 				pelter1_files.append(os.path.join(root, file))
 
 pelter1_files=sorted(pelter1_files)
@@ -65,7 +65,10 @@ df['Temperature [ITS-90 deg C]'] = cnv.data['tv290C'].tolist()
 df['Depth [salt water m]'] = cnv.data['depSM'].tolist()
 df['Salinity, Practical [PSU]'] = cnv.data['sal00'].tolist()
 df['Oxygen (SBE 43) [mg/l]'] = cnv.data['sbeox0Mg/L'].tolist()
-df['pH [pH]'] = cnv.data['ph'].tolist()
+try:
+	df['pH [pH]'] = cnv.data['ph'].tolist()
+except:
+	df['pH [pH]'] = None
 df['Chlorophyll (Turner Cyclops) [ug/l]'] = cnv.data['chloroflTC0'].tolist()
 df['Turbidity (Turner Cyclops) [NTU]'] = cnv.data['turbflTC0'].tolist()
 df['Bottles Fired [n]'] = cnv.data['nbf'].tolist()
@@ -157,7 +160,7 @@ for ifile in range(1,len(pelter1_files)):
 	df = pd.concat(frames, axis=0)
 	print(ifile, len(pelter1_files))
 
-df.to_csv('/Users/privateprivate/SAEON/Ocean_Accounts/pelter6.csv',index=False, sep=",")
+df.to_csv('/Users/privateprivate/SAEON/Ocean_Accounts/pelter8.csv',index=False, sep=",")
 
 
 
