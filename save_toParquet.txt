@@ -1,0 +1,120 @@
+import plotly.express as px
+import pandas as pd
+import pyarrow.parquet as pq
+import datashader as ds
+import plotly.graph_objects as go
+import numpy as np
+from datetime import datetime
+from datetime import date
+
+def f(row):
+    if row['Date2'].month in range(3, 6):
+        val = 'autumn'
+    elif row['Date2'].month in range(6, 9):
+        val = 'winter'
+    elif row['Date2'].month in range(9, 12):
+        val = 'spring'
+    else:
+        val = 'summer'
+    return val
+
+
+
+
+
+parquet_file = '/Users/privateprivate/SAEON/Dash_applications/apps/ocean/Data/pelter8.parquet'
+dq=pq.read_table(parquet_file,filters=[('Temperature [ITS-90 deg C]', '>', -10),('Temperature [ITS-90 deg C]', '<', 30)])
+df=dq.to_pandas()
+df['Date2'] = pd.to_datetime(df['Date2'], format='%Y-%m-%d').dt.date
+df['season'] = df.apply(f, axis=1)
+
+df = df[df['Depth [salt water m]'] >= 0]
+cut_labels = ['0-2', '2-10', '10-20', '20-30','30-40','40-50','50-60','60-70', '70-80']
+cut_bins = [0, 2, 10, 20, 30, 40, 50, 60, 70, 80]
+depth_class = pd.cut(df['Depth [salt water m]'], bins=cut_bins, labels=cut_labels).rename('depth_class')
+df=pd.concat([df,depth_class], axis=1)#.sort_values('Depth [salt water m]', ascending=True)
+
+df.to_parquet('/Users/privateprivate/SAEON/Dash_applications/apps/ocean/Data/pelter8.parquet')
+
+
+
+
+
+
+#x_range = (df.iloc[0]['Date2'], df.iloc[-1]['Date2'])
+#print(x_range)
+##from dateutil import rrule
+##from datetime import date
+#
+#df['date'] = pd.to_datetime(df['Date2'], format='%Y-%m-%d').dt.date
+#start_date='2021-01-16'
+#start_date_object = date.fromisoformat(start_date)
+#
+#print(df[(df.date >= start_date_object)])
+#a = df['date'].apply(lambda x: x.strftime('%b-%Y'))
+#print(x_range[0].year)
+#sorted(months, key=lambda m: datetime.strptime(m, "%B"))
+#a=list(rrule.rrule(rrule.MONTHLY, dtstart=datetime.strptime(x_range[0], "%Y-%m-%d"), until=datetime.strptime(x_range[1], "%Y-%m-%d")))
+#for i in a:
+#   print(date(i.year, i.month, i.day))
+#   
+#a= pd.date_range(date(datetime.strptime(x_range[0], "%Y-%m-%d").date().year,datetime.strptime(x_range[0], "%Y-%m-%d").date().month,datetime.strptime(x_range[0], "%Y-%m-%d").date().day), date(datetime.strptime(x_range[1], "%Y-%m-%d").date().year,datetime.strptime(x_range[1], "%Y-%m-%d").date().month,datetime.strptime(x_range[1], "%Y-%m-%d").date().day),freq='m')
+#
+##for i in a:
+##   print(i.strftime('%b-%Y'))
+#
+##print(x_range)
+##idx = np.round(np.linspace(x_range[0], x_range[1] - 1, numElems)).astype('int64')
+##for i in idx:
+##   datess.append(pd.to_datetime(i, format='%Y-%m-%d', errors='coerce').date())
+##Depth [salt water m]
+###group data into defined bins
+#cut_labels = ['0-2', '2-10', '10-20', '20-30','30-40','40-50','50-60','60-70', '70-80']
+#cut_bins = [0, 2, 10, 20, 30, 40, 50, 60, 70, 80]
+#depth_class = pd.cut(df['Depth [salt water m]'], bins=cut_bins, labels=cut_labels).rename('depth_class')
+#df=pd.concat([df,depth_class], axis=1).sort_values('Depth [salt water m]', ascending=True)
+#df['date'] = pd.to_datetime(df['Date2'], format='%Y-%m-%d').dt.date
+#df['season'] = df.apply(f, axis=1)
+#
+#season_data = df.loc[(df['season'] == 'summer')]
+#
+#
+##df2 = df[["Conductivity [uS/cm]", "Temperature [ITS-90 deg C]"]]
+##print(min(df.Date2))
+##df = px.data.tips()
+#
+#fig = px.box(
+#   season_data, 
+#   x='Temperature [ITS-90 deg C]',
+#   y="depth_class",
+##   color="season",
+##   
+##   color_discrete_map={ # replaces default color mapping by value
+##       "summer": "rgb(253,211,43)", "winter": "rgb(0,155,222)","autumn": "rgb(171,68,1)","spring": "rgb(151,189,25)"},
+#   #   boxmode='group'
+#   labels=dict(depth_class='Classed depth below surface (m)'),
+#   
+#)   
+#fig.update_yaxes(autorange="reversed")
+##fig.update_layout(xaxis=dict(rangeslider=dict(visible=False),type="date"))
+#fig.show()
+
+
+
+
+
+#fig = px.box(
+#           season_filter_data,
+#           x=input1,
+#           y="depth_class",
+#           labels=dict(depth_class='Classed depth below surface (m)'),
+#           color="depth_class",
+#           notched=True,
+#           # color=input1,
+#           # color_continuous_scale="Plasma",
+#           title=station
+#       )
+#       fig.update_yaxes(autorange="reversed")
+#       fig.update_xaxes(autorange="reversed")
+#   return fig
+    

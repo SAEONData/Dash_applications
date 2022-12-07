@@ -464,9 +464,8 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
             parquet_file = pathlib.Path(__file__).parent / 'Data' / 'pelter7.parquet'
         elif input1 == 'PELTER8':
             parquet_file = pathlib.Path(__file__).parent / 'Data' / 'pelter8.parquet'
-            
-            
-#       dq=pq.read_table(parquet_file)
+                        
+#       dq=pq.read_table(parquet_file,columns=['Date','Date2','season','iTime',str(input2),str(input3)])
         dq=pq.read_table(parquet_file,filters=[('Temperature [ITS-90 deg C]', '>', -10),('Temperature [ITS-90 deg C]', '<', 30)])
         df=dq.to_pandas()
         #convert to datetime
@@ -482,7 +481,7 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
             df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1])]
         else:
             df = df.loc[(df['season'] == input7[0])]
-#           
+        
         start_date_object = date.fromisoformat(date1)
         end_date_object = date.fromisoformat(date2)
         df = df[(df.Date2 >= start_date_object) & (df.Date2 <= end_date_object)]
@@ -547,21 +546,9 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
                 
                 )
         )
-#       df.close()
         return fig
     except:
         raise PreventUpdate
 
 
-#@app.callback(
-#   Output('app-2-display-value', 'children'),
-#   Input("var-dropdown", 'value'),
-#   Input("stat-dropdown", "value")
-#)
-#def display_value(input1, input2):
-#   return 'the variable being displayed in the chart is "{}"'.format(input1) + ' for the station "{}"'.format(input2)
-#
-
-#if __name__ == '__main__':
-#   app.run_server(debug=True)
     
