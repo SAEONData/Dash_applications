@@ -139,23 +139,7 @@ seasonList=['spring','summer','autumn','winter']
 layout = html.Div([
 dbc.Card(
     dbc.CardBody([
-        dbc.Row(children=[
-            dbc.Col([
-                html.Img(src=app.get_asset_url("NRFSAEON.jpg"), className='logo')
-            ],width='auto'),
-            dbc.Col([
-                html.Img(src=app.get_asset_url("NMU.png"), className='logo')
-            ],width='auto'),
-            dbc.Col([
-                html.Img(src=app.get_asset_url("CMR2.png"), className='logo')
-            ],width='auto'),
-            dbc.Col([
-                html.Img(src=app.get_asset_url("CPUT.png"), className='logo')
-            ],width='auto'),
-            dbc.Col([
-                html.Img(src=app.get_asset_url("GOAP.png"), className='logo')
-            ],width='auto'),
-        ],align="center"),
+        
         
         
         
@@ -355,8 +339,26 @@ dbc.Card(
                     html.Div(dcc.Graph(id='graph_new',style={'height': '400px'})),
                 ]),
             ],width=7)
-        ])
-    ])
+        ]),
+        dbc.Row(children=[
+            dbc.Col([
+                html.Img(src=app.get_asset_url("NRFSAEON.jpg"), className='logo')
+            ],width='auto'),
+            dbc.Col([
+                html.Img(src=app.get_asset_url("NMU.png"), className='logo')
+            ],width='auto'),
+            dbc.Col([
+                html.Img(src=app.get_asset_url("CMR2.png"), className='logo')
+            ],width='auto'),
+            dbc.Col([
+                html.Img(src=app.get_asset_url("CPUT.png"), className='logo')
+            ],width='auto'),
+            dbc.Col([
+                html.Img(src=app.get_asset_url("GOAP.png"), className='logo')
+            ],width='auto'),
+        ],align="center")
+    ]),
+    
 )
 ])
 # Define callback to update graph
@@ -447,8 +449,7 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
     try:
         parquet_file=''
         if input1 == 'PELTER1':
-            parquet_file = pathlib.Path(__file__).parent / 'Data' / 'pelter1.parquet'
-            
+            parquet_file = pathlib.Path(__file__).parent / 'Data' / 'pelter1.parquet'            
         elif input1 == 'PELTER2':
             parquet_file = pathlib.Path(__file__).parent / 'Data' / 'pelter2.parquet'
         elif input1 == 'PELTER3':
@@ -468,10 +469,9 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
 #       dq=pq.read_table(parquet_file)
         dq=pq.read_table(parquet_file,filters=[('Temperature [ITS-90 deg C]', '>', -10),('Temperature [ITS-90 deg C]', '<', 30)])
         df=dq.to_pandas()
-        
-        df['date'] = pd.to_datetime(df['Date2'], format='%Y-%m-%d').dt.date
-        df['season'] = df.apply(f, axis=1)
-        
+        #convert to datetime
+        df['Date2'] = pd.to_datetime(df['Date2'], format='%Y-%m-%d').dt.date
+
         # Filter the Data by Season
         if len(input7) == 4:
             df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1]) | (df['season'] == input7[2]) | (
@@ -482,17 +482,17 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
             df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1])]
         else:
             df = df.loc[(df['season'] == input7[0])]
-            
+#           
         start_date_object = date.fromisoformat(date1)
         end_date_object = date.fromisoformat(date2)
-        df = df[(df.date >= start_date_object) & (df.date <= end_date_object)]
-        
-        
-        df = df[df['Depth [salt water m]'] >= 0]
-        cut_labels = ['0-2', '2-10', '10-20', '20-30','30-40','40-50','50-60','60-70', '70-80']
-        cut_bins = [0, 2, 10, 20, 30, 40, 50, 60, 70, 80]
-        depth_class = pd.cut(df['Depth [salt water m]'], bins=cut_bins, labels=cut_labels).rename('depth_class')
-        df=pd.concat([df,depth_class], axis=1)#.sort_values('Depth [salt water m]', ascending=True)
+        df = df[(df.Date2 >= start_date_object) & (df.Date2 <= end_date_object)]
+#       
+#       
+#       df = df[df['Depth [salt water m]'] >= 0]
+#       cut_labels = ['0-2', '2-10', '10-20', '20-30','30-40','40-50','50-60','60-70', '70-80']
+#       cut_bins = [0, 2, 10, 20, 30, 40, 50, 60, 70, 80]
+#       depth_class = pd.cut(df['Depth [salt water m]'], bins=cut_bins, labels=cut_labels).rename('depth_class')
+#       df=pd.concat([df,depth_class], axis=1)#.sort_values('Depth [salt water m]', ascending=True)
                 
         x=str(input2)
         x_range = (df.iloc[0][str(input2)], df.iloc[-1][str(input2)])
