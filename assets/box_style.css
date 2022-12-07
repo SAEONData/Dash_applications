@@ -1,0 +1,133 @@
+.prepend-text {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 0rem 0.2rem;
+    margin-bottom: 0;
+    font-size: 0.85rem;
+    font-weight: 200;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    width: 150px;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+}
+
+.prepend-text0 {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 0rem 0.2rem;
+    margin-bottom: 0;
+    font-size: 0.85rem;
+    font-weight: 200;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    width: 90px;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+}
+
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    /background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    width: 130px;
+    text-align: right;
+}
+
+.append-text {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 0rem 0rem;
+    margin-bottom: 0;
+    font-size: 0.75rem;
+    font-weight: 200;
+    line-height: 1.0;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    //background-color: #e9ecef;
+    border: 0px solid #ced4da;
+    width: 120px;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+}
+
+
+.season-text {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 0.5rem 0rem;
+    margin-bottom: 0;
+    font-size: 0.85rem;
+    font-weight: 200;
+    line-height: 1.0;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    //background-color: #e9ecef;
+    border: 0px solid #ced4da;
+    width: 120px;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+}
+
+/* Fix the font size and other stuff of datepicker*/
+.DateInput_input, .DateInput_input_1 {
+    /* my personal stuff */
+    text-align: center;
+    line-height: calc(1em);
+    /* default flatly stuff */
+    height: calc(1em);
+    font-size: 0.85rem;
+    font-weight: 200;
+    color: #7b8a8b;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 0px solid #ced4da;
+    border-radius: 0rem;
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.Select--single>.Select-control .Select-value, .Select-placeholder 
+{
+    line-height: 20px;
+}

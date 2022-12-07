@@ -12,6 +12,8 @@ import dash_bootstrap_components as dbc
 import pyarrow.parquet as pq
 from dash_extensions.javascript import assign
 import dash_leaflet as dl
+from datetime import datetime as dt
+from datetime import date
 #external_stylesheets=[dbc.themes.GRID]
 #directory = path.path(__file__).abspath()
 #directory = pathlib.Path(__file__).parent.parent
@@ -20,6 +22,16 @@ import dash_leaflet as dl
 from app import app
 
 #app = dash.Dash(prevent_initial_callbacks=True)
+def f(row):
+    if row['date'].month in range(3, 6):
+        val = 'autumn'
+    elif row['date'].month in range(6, 9):
+        val = 'winter'
+    elif row['date'].month in range(9, 12):
+        val = 'spring'
+    else:
+        val = 'summer'
+    return val
 
 def dicts_to_geojson(dicts, lat="lat", lon="lon"):
     geojson = {"type": "FeatureCollection", "features": []}
@@ -31,7 +43,7 @@ def dicts_to_geojson(dicts, lat="lat", lon="lon"):
         geojson["features"].append(feature)
     return geojson
 
-style = {'width': '100%', 'height': '400px', 'float': 'left'}
+style = {'width': '100%', 'height': '350px', 'float': 'left'}
 #style2 = {'width': '49%', 'height': '500px', 'float': 'right'}
 
 url = "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
@@ -73,14 +85,21 @@ point_to_layer = assign("""function(feature, latlng, context){
         // Figure out if the marker is selected
         //const match = context.props.hideout &&  context.props.hideout.properties.name === name;
         const match = context.props.hideout.includes(feature.properties.name);
+        const flag = L.icon({iconUrl: '/assets/star_red.png', iconSize: [16, 16]});
+        const flag2 = L.icon({iconUrl: '/assets/star_green.png', iconSize: [16, 16]});
         //const selected = context.props.hideout.includes(feature.properties.name);
         // Render selected markers in red.
-        if(match){return L.circleMarker(latlng, {fillColor: 'green', fillOpacity: '0.75',Opacity: '1'});}
+        if(match){return L.marker(latlng, {icon: flag2})};
+        //L.circleMarker(latlng, {fillColor: 'green', fillOpacity: '0.75',Opacity: '1'});}
         //if(selected){return L.circleMarker(latlng, {fillColor: 'green', fillOpacity: '0.75',Opacity: '1'});}
         // Render non-selected markers in blue.
         //circleOptions.fillColor = 'red'
-        return L.circleMarker(latlng, {fillColor: 'red', fillOpacity: '0.75',Opacity: '1'});
+        return L.marker(latlng, {icon: flag}); 
+        //L.circleMarker(latlng, {fillColor: 'red', fillOpacity: '0.75',Opacity: '1'});
 }""")
+
+
+
 
 
 #app = dash.Dash(__name__,external_stylesheets = external_stylesheets, suppress_callback_exceptions=True)
@@ -94,11 +113,16 @@ point_to_layer = assign("""function(feature, latlng, context){
 ##
 ## list the variables we want to display
 sensor_list = ['ITime','Conductivity [uS/cm]', 'Temperature [ITS-90 deg C]', 'Depth [salt water m]', 'Salinity, Practical [PSU]', 'Oxygen (SBE 43) [mg/l]', 'pH [pH]', 'Chlorophyll (Turner Cyclops) [ug/l]', 'Turbidity (Turner Cyclops) [NTU]']
-#
-## Get a list of the Stations in alphabetical order
-#df = df.sort_values(by=['Station'])
+
+chart_types=['Scatter plot (x,y variables)', 'Box plot (x variable)']
+
 stations = ['PELTER1','PELTER2','PELTER3','PELTER4','PELTER5','PELTER6','PELTER7','PELTER8']
 parquet_file = ""
+
+filter_table = pd.DataFrame({'Start':[],'End':[],'Min':[],'Max':[],'Summer':[], 'Spring':[], 'Autumn':[], 'Winter':[], 'Depth bins':[]})
+seasonList=['spring','summer','autumn','winter']
+
+
 # Get a list of the dates we want to show
 #df['date'] = df['date'].replace('201900809', '20190809')
 #df = df.sort_values(by=['date', 'Depth'])
@@ -142,20 +166,56 @@ dbc.Card(
                 dbc.Row(children=[
                     #Dropdown for the Station to chart
                     dbc.Col([
-                        html.Label(["Station"])
+                        html.Label(["Select a station:"],className = 'prepend-text')
                     ],width='auto'),
                     dbc.Col([
                         html.Label([
                             dcc.Dropdown(
                                 id='stat-dropdown', clearable=False,
+                                style={'height': '25px','width':'100%','display': 'inline-block'},
                                 value='', options=[
                                     {'label': st, 'value': st}
                                     for st in stations
                                 ])
-                        ],style={'display': 'inline-block','margin-right': '2em','width':'80%','verticalAlign':'middle'}),
-                    ],),
+                        ],className = 'append-text',style={'display': 'inline-block','width':'100%','verticalAlign':'middle'}),
+                    ]),
                 ],align="center"),
-                               
+                    
+        
+                    
+                    dbc.Row(children=[
+                        dbc.Col([
+                            html.Label(["Select x variable:"],className = 'prepend-text')
+                        ],width='auto'),
+                        dbc.Col([
+                            html.Label([
+                            dcc.Dropdown(
+                                id='var-dropdownx', clearable=False,
+                                style={'height': '25px','width':'100%','display': 'inline-block'},
+                                value='Temperature [ITS-90 deg C]', options=[
+                                    {'label': s, 'value': s}
+                                    for s in sensor_list
+                                ])
+                            ],className = 'append-text',style={'display': 'inline-block','width':'100%','verticalAlign':'middle'})
+                        ]),
+                    ],align="center"),
+                    dbc.Row(children=[
+                        dbc.Col([
+                            html.Label(["Select y variable:"],className = 'prepend-text')
+                        ],width='auto'),
+                        dbc.Col([
+                            html.Label([
+                            dcc.Dropdown(
+                                id='var-dropdowny', clearable=False,
+                                style={'height': '25px','width':'100%','display': 'inline-block'},
+                                value='Depth [salt water m]', options=[
+                                    {'label': s, 'value': s}
+                                    for s in sensor_list
+                                ]),
+                            ],className = 'append-text',style={'display': 'inline-block','width':'100%','verticalAlign':'middle'})
+                        ]),
+                    ],align="center"),
+                    
                 #map
                 dbc.Row(
                     html.Div([dl.Map([
@@ -172,7 +232,7 @@ dbc.Card(
                                 hideout=dict(click_feature=None),id="geojson"),
                     ],
                         zoom=9,
-                        center=(-33.681, 25.842),
+                        center=(-33.76805556, 25.90602778),
                         style=style,
                         id="map",
                     )
@@ -186,43 +246,112 @@ dbc.Card(
             
             #right hand col
             dbc.Col(children=[
+#               dbc.Row(children=[
+#                   dbc.Col([
+#                       html.Label(["x variable"])
+#                   ],width='auto'),
+#                   dbc.Col([
+#                       html.Label([
+#                       dcc.Dropdown(
+#                           id='var-dropdownx', clearable=False,
+#                           value='', options=[
+#                               {'label': s, 'value': s}
+#                               for s in sensor_list
+#                           ]),
+#                       ],style={'display': 'inline-block','margin-right': '2em','width':'80%','verticalAlign':'middle'})
+#                   ]),
+#               ],align="center"),
+#               dbc.Row(children=[
+#                   dbc.Col([
+#                       html.Label(["y variable"])
+#                   ],width='auto'),
+#                   dbc.Col([
+#                       html.Label([
+#                       dcc.Dropdown(
+#                           id='var-dropdowny', clearable=False,
+#                           value='', options=[
+#                               {'label': s, 'value': s}
+#                               for s in sensor_list
+#                           ]),
+#                       ],style={'display': 'inline-block','margin-right': '2em','width':'80%','verticalAlign':'middle'})
+#                   ]),
+#               ],align="center"),
+                
+                
+                
                 dbc.Row(children=[
                     dbc.Col([
-                        html.Label(["x variable"])
+                        html.Label(["Chart type:"],title="Hello, some info would be helpful helpful here.",className = 'prepend-text0')
+                        
                     ],width='auto'),
                     dbc.Col([
                         html.Label([
                         dcc.Dropdown(
-                            id='var-dropdownx', clearable=False,
-                            value='', options=[
+                            id='var-chartTypeDropdown', clearable=False,
+                            style={'height': '25px','width':'100%','display': 'inline-block'},
+                            value='Scatter plot (x,y variables)', options=[
                                 {'label': s, 'value': s}
-                                for s in sensor_list
-                            ]),
-                        ],style={'display': 'inline-block','margin-right': '2em','width':'80%','verticalAlign':'middle'})
+                                for s in chart_types
+                            ])
+                        ],className = 'append-text',style={'display': 'inline-block','width':'100%','verticalAlign':'middle'})
                     ]),
-                ],align="center"),
-                dbc.Row(children=[                    
-                    dbc.Col([
-                        html.Label(["y variable"])
-                    ],width='auto'),
-                    dbc.Col([
-                        html.Label([
-                        dcc.Dropdown(
-                            id='var-dropdowny', clearable=False,
-                            value='', options=[
-                                {'label': s, 'value': s}
-                                for s in sensor_list
-                            ]),
-                        ],style={'display': 'inline-block','margin-right': '2em','width':'80%','verticalAlign':'middle'})
-                    ]),
-                ],align="center"),
-                
-                
-                
-                
-                
-                dbc.Row(children=[
                     
+                    dbc.Col([
+                        html.Label([
+                            dcc.Checklist(
+                                id='reverse_x_axis',
+                                options=[' Reserve x-axis'],
+                                    value=['no']),
+                                
+                        ],className = 'prepend-text')
+                    ],width='auto'),
+                    
+                    dbc.Col([
+                        html.Label([
+                            dcc.Checklist(
+                                id='reverse_y_axis',
+                                options=[' Reserve y-axis'],
+                                    value=[' Reserve y-axis']),
+                            
+                        ],className = 'prepend-text')
+                    ],width='auto'),
+                    
+                    
+                    
+                ],align="center"),
+                
+                dbc.Row(children=[
+                    dbc.Col([
+                    
+                    html.Label(["Select a Season: ",
+                        
+                        
+                        dcc.Checklist(
+                            id='season_selector',
+                            options=[{'label': k, 'value': k} for k in seasonList],
+                            value=['spring','summer','autumn','winter'])
+#                       dcc.RangeSlider(0, 20, 1, value=[5, 15], id='my-range-slider')
+                        
+                    ],className='season-text')
+                    
+                    ]),
+                    dbc.Col([
+                        
+                            
+                        dcc.DatePickerRange(
+                            id='my-date-picker-range',                            
+                            start_date=dt.strptime("2012-04-18", "%Y-%m-%d").date(),
+                            end_date=dt.strptime("2021-03-16", "%Y-%m-%d").date(),
+                            display_format="YYYY/MM/DD",
+                            clearable=False,
+                        )
+                    
+                    ])
+                    
+                ],align="center"),
+
+                                          
+                dbc.Row(children=[
                     html.Div(dcc.Graph(id='graph_new',style={'height': '400px'})),
                 ]),
             ],width=7)
@@ -230,65 +359,28 @@ dbc.Card(
     ])
 )
 ])
-
-#app.layout = html.Div([
-#   # Heading
-#   html.H1("Datashader Visualisation App"),
-#   # Subheading
-##   html.H2("Dynamic Visualisation of variables"),
-#   # Dropdown for the Station to chart
-#   html.Label([
-#       "Station",
-#       dcc.Dropdown(
-#           id='stat-dropdown', clearable=False,
-#           value='', options=[
-#               {'label': st, 'value': st}
-#               for st in stations
-#           ])
-#           ],style={'display': 'inline-block', 'width': '25%','margin-right': '2em','verticalAlign':'middle'}),
-##   # timeslider to analyse time series
-##   html.Label([
-##       "Date",
-##       dcc.RangeSlider(
-##           id='slider',
-##           marks=date_mark,
-##           min=0,
-##           max=22,
-##           value=[0, 2])
-##   ]),
-#   # Chart
-#   
-#   # Dropdown for the variables to chart
-#   html.Label([
-#       "x variable   ",
-##       ,dcc.Checklist(['   reverse axis'],checked=False,
-##           style={'display': 'inline-block','margin-right': '2em'},id='var-check-reversex'
-##       ),
-#       dcc.Dropdown(
-#           id='var-dropdownx', clearable=False,
-#           value='', options=[
-#               {'label': s, 'value': s}
-#               for s in sensor_list
-#           ])
-#   ],style={'display': 'inline-block', 'width': '25%','margin-right': '2em','verticalAlign':'middle'}),
-#   html.Label([
-#       "y variable   ",    
-##       dcc.Checklist(['   reverse axis'],checked=True,id='var-check-reversey',
-##           style={'display': 'inline-block','margin-right': '2em'}
-##       ),
-#
-#       dcc.Dropdown(
-#           id='var-dropdowny', clearable=False,
-#           value='', options=[
-#               {'label': s, 'value': s}
-#               for s in sensor_list
-#           ])
-#   ],style={'display': 'inline-block', 'width': '25%','margin-right': '2em','verticalAlign':'middle'}),
-#   
-#   html.Div(dcc.Graph(id='graph_new',style={'height': '500px'})),
-#   
-#])
 # Define callback to update graph
+#@app.callback(
+#   Output('output-container-date-picker-range', 'children'),
+#   Input('my-date-picker-range', 'start_date'),
+#   Input('my-date-picker-range', 'end_date'))
+#
+#def update_output(start_date, end_date):
+#   string_prefix = 'You have selected: '
+#   if start_date is not None:
+#       start_date_object = date.fromisoformat(start_date)
+#       start_date_string = start_date_object.strftime('%B %d, %Y')
+#       string_prefix = string_prefix + 'Start Date: ' + start_date_string + ' | '
+#   if end_date is not None:
+#       end_date_object = date.fromisoformat(end_date)
+#       end_date_string = end_date_object.strftime('%B %d, %Y')
+#       string_prefix = string_prefix + 'End Date: ' + end_date_string
+#   if len(string_prefix) == len('You have selected: '):
+#       return 'Select a date to see it displayed here'
+#   else:
+#       return string_prefix
+
+
 
 @app.callback([Output("map", "center"),Output("map", "zoom")], [Input("stat-dropdown", "value"), Input("geojson", "click_feature"),])
 def func(input, feature):
@@ -340,12 +432,18 @@ def update_dropdown(feature):
     Output('graph_new', 'figure'),
     Input("stat-dropdown", "value"),
     Input("var-dropdownx", "value"),
-    Input("var-dropdowny", "value")
+    Input("var-dropdowny", "value"),
+    Input('reverse_y_axis', 'value'),
+    Input('reverse_x_axis', 'value'),
+    Input('var-chartTypeDropdown', 'value'),
+    Input('season_selector', 'value'),
+    Input('my-date-picker-range', 'start_date'),
+    Input('my-date-picker-range', 'end_date')
     
 )
 ## define the function to update the graph based on the user selection
-def update_figure(input1, input2, input3):
-##   print(input4)
+def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date2):
+#   print(date1)
     try:
         parquet_file=''
         if input1 == 'PELTER1':
@@ -367,49 +465,95 @@ def update_figure(input1, input2, input3):
             parquet_file = pathlib.Path(__file__).parent / 'Data' / 'pelter8.parquet'
             
             
+#       dq=pq.read_table(parquet_file)
         dq=pq.read_table(parquet_file,filters=[('Temperature [ITS-90 deg C]', '>', -10),('Temperature [ITS-90 deg C]', '<', 30)])
         df=dq.to_pandas()
         
+        df['date'] = pd.to_datetime(df['Date2'], format='%Y-%m-%d').dt.date
+        df['season'] = df.apply(f, axis=1)
         
+        # Filter the Data by Season
+        if len(input7) == 4:
+            df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1]) | (df['season'] == input7[2]) | (
+                df['season'] == input7[3])]
+        elif len(input7) == 3:
+            df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1]) | (df['season'] == input7[2])]
+        elif len(input7) == 2:
+            df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1])]
+        else:
+            df = df.loc[(df['season'] == input7[0])]
+            
+        start_date_object = date.fromisoformat(date1)
+        end_date_object = date.fromisoformat(date2)
+        df = df[(df.date >= start_date_object) & (df.date <= end_date_object)]
+        
+        
+        df = df[df['Depth [salt water m]'] >= 0]
+        cut_labels = ['0-2', '2-10', '10-20', '20-30','30-40','40-50','50-60','60-70', '70-80']
+        cut_bins = [0, 2, 10, 20, 30, 40, 50, 60, 70, 80]
+        depth_class = pd.cut(df['Depth [salt water m]'], bins=cut_bins, labels=cut_labels).rename('depth_class')
+        df=pd.concat([df,depth_class], axis=1)#.sort_values('Depth [salt water m]', ascending=True)
+                
         x=str(input2)
         x_range = (df.iloc[0][str(input2)], df.iloc[-1][str(input2)])
-        
-        #       if input2 == 'ITime':
         datess_index=[]
         datess=[]
-        numElems=10
+        numElems=5
         idx = np.round(np.linspace(x_range[0], x_range[1] - 1, numElems)).astype('int64')
         for i in idx:
             datess_index.append(i)
             datess.append(pd.to_datetime(i, format='%Y-%m-%d', errors='coerce').date())
         cvs = ds.Canvas(plot_width=256, plot_height=256)
-        #       else:
-        
-        #   print(input1, input2)
         y=str(input3)
-        agg = cvs.points(df, x,y)
-        
-        zero_mask = agg.values == 0
-        agg.values = np.log10(agg.values, where=np.logical_not(zero_mask))
-        agg.values[zero_mask] = np.nan
-        
-        fig = px.imshow(agg, origin='lower', color_continuous_scale='turbo',labels={'color':'Log10(count)'})
-        fig.update_traces(hoverongaps=False)
-        fig.update_layout(coloraxis_colorbar=dict(title='Count'))
         
         
-        if input2 == 'ITime':
-            fig.update_xaxes(
+        
+        if input6 == 'Scatter plot (x,y variables)':
+            agg = cvs.points(df, x,y)
+            zero_mask = agg.values == 0
+            agg.values = np.log(agg.values, where=np.logical_not(zero_mask))
+            agg.values[zero_mask] = np.nan
+            
+            fig = px.imshow(agg, origin='lower', color_continuous_scale='turbo',labels={'color':'Log(count)'})
+            fig.update_traces(hoverongaps=False)
+            fig.update_layout(coloraxis_colorbar=dict(title='Log(n)'))
+            if input2 == 'ITime':
+                fig.update_xaxes(
+                    tickmode = 'array',
+                    tickvals=datess_index,
+                    ticktext=datess,
+                    title="time"
+                )
                 
-                tickmode = 'array',
-                tickvals=datess_index,
-                ticktext=datess,
-                title="time"
+        else:
+            fig = px.box(
+                df, 
+                x=str(input2),
+                y="depth_class",
+                color="season",
+                color_discrete_map={ # replaces default color mapping by value
+                    "summer": "rgb(253,211,43)", "winter": "rgb(0,155,222)","autumn": "rgb(171,68,1)","spring": "rgb(151,189,25)"},
+                labels=dict(depth_class='Classed depth below surface (m)'),
+            )
+            
+        
+        if len(input4)>0:
+            fig.update_layout(
+                yaxis = dict(autorange="reversed")
+            )
+        if len(input5)>1:
+            fig.update_layout(
+                xaxis = dict(autorange="reversed")
             )
         fig.update_layout(
             margin=dict(l=0, r=0, t=30, b=0),
-            yaxis = dict(autorange="reversed")
+            font=dict(
+                family="Times New Roman",
+                    size=12
+                
+                )
         )
+#       df.close()
         return fig
     except:
         raise PreventUpdate
