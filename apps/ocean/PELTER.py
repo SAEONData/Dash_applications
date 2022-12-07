@@ -486,13 +486,7 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
         start_date_object = date.fromisoformat(date1)
         end_date_object = date.fromisoformat(date2)
         df = df[(df.Date2 >= start_date_object) & (df.Date2 <= end_date_object)]
-#       
-#       
-#       df = df[df['Depth [salt water m]'] >= 0]
-#       cut_labels = ['0-2', '2-10', '10-20', '20-30','30-40','40-50','50-60','60-70', '70-80']
-#       cut_bins = [0, 2, 10, 20, 30, 40, 50, 60, 70, 80]
-#       depth_class = pd.cut(df['Depth [salt water m]'], bins=cut_bins, labels=cut_labels).rename('depth_class')
-#       df=pd.concat([df,depth_class], axis=1)#.sort_values('Depth [salt water m]', ascending=True)
+
                 
         x=str(input2)
         x_range = (df.iloc[0][str(input2)], df.iloc[-1][str(input2)])
