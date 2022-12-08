@@ -13,7 +13,6 @@ for dir_, _, files in os.walk(file_path):
                 pass
             elif file_name.endswith("contents.py"):
                 pass
-#           elif file_name.endswith("__init__.py"):
             elif file_name.endswith(".py"):
                 rel_dir = os.path.relpath(dir_, file_path)
                 name = file_name[:-3]
