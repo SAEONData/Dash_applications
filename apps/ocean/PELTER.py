@@ -283,7 +283,7 @@ dbc.Card(
                 dbc.Row(children=[
                     dbc.Col([
                     
-                    html.Label(["Select a Season: ",
+                    html.Label(["Season: ",
                         
                         
                         dcc.Checklist(
@@ -295,20 +295,25 @@ dbc.Card(
                     ],className='append-text')
                     
                     ]),
-                    dbc.Col([
-                        
-                            
-                        dcc.DatePickerRange(
-                            id='my-date-picker-range',                            
-                            start_date=dt.strptime("2012-04-18", "%Y-%m-%d").date(),
-                            end_date=dt.strptime("2021-03-16", "%Y-%m-%d").date(),
-                            display_format="YYYY/MM/DD",
-                            clearable=False,
-                        )
+                                        
+                ]),
+            dbc.Row(children=[
+                dbc.Col([
                     
-                    ])
+                    html.Label(["Date range: ",
+                    dcc.DatePickerRange(
+                        id='my-date-picker-range',                            
+                        start_date=dt.strptime("2012-04-18", "%Y-%m-%d").date(),
+                        end_date=dt.strptime("2021-03-16", "%Y-%m-%d").date(),
+                        display_format="YYYY/MM/DD",
+                        clearable=False,
+                    )
+                    ],className='append-text')
                     
-                ],align="center"),
+                ])
+                
+                
+            ]),
 
                                           
                 dbc.Row(children=[
@@ -493,13 +498,13 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
             zero_mask = agg.values == 0
             
 #           print(agg.values[0])
-            agg.values = np.trunc(agg.values, where=np.logical_not(zero_mask))
+            agg.values = np.log(agg.values, where=np.logical_not(zero_mask))
             agg.values[zero_mask]=np.nan
 #           agg.values[zero_mask] = np.nan
 #           
-            fig = px.imshow(agg, origin='lower', color_continuous_scale='turbo',labels={'color':'Count'})
+            fig = px.imshow(agg, origin='lower', color_continuous_scale='turbo',labels={'color':'Log value'})
             fig.update_traces(hoverongaps=False)
-            fig.update_layout(coloraxis_colorbar=dict(title='Count'))
+            fig.update_layout(coloraxis_colorbar=dict(title='Log(n)'))
             if input2 == 'Integer Time':
                 fig.update_xaxes(
                     tickmode = 'array',

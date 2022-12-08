@@ -5,7 +5,7 @@
     align-items: center;
     padding: 0rem 0.2rem;
     margin-bottom: 0;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 200;
     line-height: 1.5;
     color: #495057;
@@ -13,7 +13,7 @@
     white-space: nowrap;
     background-color: #e9ecef;
     border: 1px solid #ced4da;
-    width: 150px;
+    width: 100px;
     border-top-left-radius: 0rem;
     border-top-right-radius: 0rem;
     border-bottom-right-radius: 0rem;
@@ -91,7 +91,7 @@
     align-items: center;
     padding: 0.5rem 0rem;
     margin-bottom: 0;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 200;
     line-height: 1.0;
     color: #495057;
@@ -110,10 +110,10 @@
 .DateInput_input, .DateInput_input_1 {
     /* my personal stuff */
     text-align: center;
-    line-height: calc(1em);
+    line-height: calc(0.75em);
     /* default flatly stuff */
-    height: calc(1em);
-    font-size: 0.85rem;
+    height: calc(0.75em);
+    font-size: 0.75rem;
     font-weight: 200;
     color: #7b8a8b;
     background-color: #fff;
