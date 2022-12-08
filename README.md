@@ -47,7 +47,7 @@ The Dash Server is a linux server located at 192.168.117.49
 Ask Sephy to create a username and password for you on that server and you will be able to SSH onto the server.
 
 After Accessing the server, switch to the root user by typing `sudo -s`.
-Then, `cd` to the `/srv/Dash_applications` directory and run the following
+Then, `cd` to the `cd /srv/Dash_applications` directory and run the following
 commands to update the deployed Dash apps:
 
     git pull
