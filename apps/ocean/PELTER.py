@@ -112,15 +112,15 @@ point_to_layer = assign("""function(feature, latlng, context){
 ##print(df)
 ##
 ## list the variables we want to display
-sensor_list = ['ITime','Conductivity [uS/cm]', 'Temperature [ITS-90 deg C]', 'Depth [salt water m]', 'Salinity, Practical [PSU]', 'Oxygen (SBE 43) [mg/l]', 'pH [pH]', 'Chlorophyll (Turner Cyclops) [ug/l]', 'Turbidity (Turner Cyclops) [NTU]']
+sensor_list = ['Chlorophyll-a (Turner Cyclops) [ug/l]','Conductivity [uS/cm]', 'Depth (sea water) [m]','Integer Time','Oxygen (SBE 43) [mg/l]', 'pH [pH]','Salinity [PSU]','Temperature (ITS-90) [deg C]', 'Turbidity (Turner Cyclops) [NTU]']
 
-chart_types=['Scatter plot (x,y variables)', 'Box plot (x variable)']
-
+chart_types=['Heatmap (x,y variables)', 'Box plot (x variable)']
+#Heat map display of log counts of data values/pixel.
 stations = ['PELTER1','PELTER2','PELTER3','PELTER4','PELTER5','PELTER6','PELTER7','PELTER8']
 parquet_file = ""
 
 filter_table = pd.DataFrame({'Start':[],'End':[],'Min':[],'Max':[],'Summer':[], 'Spring':[], 'Autumn':[], 'Winter':[], 'Depth bins':[]})
-seasonList=['spring','summer','autumn','winter']
+seasonList=['Spring','Summer','Autumn','Winter']
 
 
 # Get a list of the dates we want to show
@@ -140,7 +140,16 @@ layout = html.Div([
 dbc.Card(
     dbc.CardBody([
         
-        
+        dbc.Row(children=[
+            html.H2(["ODET: Ocean Data Explorer Tool"
+                
+            ],style={'display': 'inline-block','width':'100%','verticalAlign':'middle','textAlign': 'center'}),
+        ],align="center"),
+        dbc.Row(children=[
+            html.H4(["Algoa Bay Sentinel Site CTD raw in-situ data, 2012 -2021"
+                
+            ],style={'display': 'inline-block','width':'100%','verticalAlign':'middle','textAlign': 'center'}),
+        ],align="center"),
         
         
         
@@ -150,7 +159,7 @@ dbc.Card(
                 dbc.Row(children=[
                     #Dropdown for the Station to chart
                     dbc.Col([
-                        html.Label(["Select a station:"],className = 'prepend-text')
+                        html.Label(["SELECT a Station:"],className = 'prepend-text')
                     ],width='auto'),
                     dbc.Col([
                         html.Label([
@@ -169,14 +178,14 @@ dbc.Card(
                     
                     dbc.Row(children=[
                         dbc.Col([
-                            html.Label(["Select x variable:"],className = 'prepend-text')
+                            html.Label(["SELECT x variable:"],className = 'prepend-text')
                         ],width='auto'),
                         dbc.Col([
                             html.Label([
                             dcc.Dropdown(
                                 id='var-dropdownx', clearable=False,
                                 style={'height': '25px','width':'100%','display': 'inline-block'},
-                                value='Temperature [ITS-90 deg C]', options=[
+                                value='Temperature (ITS-90) [deg C]', options=[
                                     {'label': s, 'value': s}
                                     for s in sensor_list
                                 ])
@@ -185,14 +194,14 @@ dbc.Card(
                     ],align="center"),
                     dbc.Row(children=[
                         dbc.Col([
-                            html.Label(["Select y variable:"],className = 'prepend-text')
+                            html.Label(["SELECT y variable:"],className = 'prepend-text')
                         ],width='auto'),
                         dbc.Col([
                             html.Label([
                             dcc.Dropdown(
                                 id='var-dropdowny', clearable=False,
                                 style={'height': '25px','width':'100%','display': 'inline-block'},
-                                value='Depth [salt water m]', options=[
+                                value='Depth (sea water) [m]', options=[
                                     {'label': s, 'value': s}
                                     for s in sensor_list
                                 ]),
@@ -222,50 +231,17 @@ dbc.Card(
                     )
                     ])),
                 dbc.Row(children=[
-                    html.Div(["Lorem Ipsum"])
-                ]),
+                    html.Div(['Collaborative tool development: Marc Pienaar, Erika Brown & Hayden Wilson'])
+                ],className = 'append-text'),
                 
                 
             ],width=5),
             
             #right hand col
             dbc.Col(children=[
-#               dbc.Row(children=[
-#                   dbc.Col([
-#                       html.Label(["x variable"])
-#                   ],width='auto'),
-#                   dbc.Col([
-#                       html.Label([
-#                       dcc.Dropdown(
-#                           id='var-dropdownx', clearable=False,
-#                           value='', options=[
-#                               {'label': s, 'value': s}
-#                               for s in sensor_list
-#                           ]),
-#                       ],style={'display': 'inline-block','margin-right': '2em','width':'80%','verticalAlign':'middle'})
-#                   ]),
-#               ],align="center"),
-#               dbc.Row(children=[
-#                   dbc.Col([
-#                       html.Label(["y variable"])
-#                   ],width='auto'),
-#                   dbc.Col([
-#                       html.Label([
-#                       dcc.Dropdown(
-#                           id='var-dropdowny', clearable=False,
-#                           value='', options=[
-#                               {'label': s, 'value': s}
-#                               for s in sensor_list
-#                           ]),
-#                       ],style={'display': 'inline-block','margin-right': '2em','width':'80%','verticalAlign':'middle'})
-#                   ]),
-#               ],align="center"),
-                
-                
-                
                 dbc.Row(children=[
                     dbc.Col([
-                        html.Label(["Chart type:"],title="Hello, some info would be helpful helpful here.",className = 'prepend-text0')
+                        html.Label(["Chart type:"],className = 'prepend-text')
                         
                     ],width='auto'),
                     dbc.Col([
@@ -273,7 +249,7 @@ dbc.Card(
                         dcc.Dropdown(
                             id='var-chartTypeDropdown', clearable=False,
                             style={'height': '25px','width':'100%','display': 'inline-block'},
-                            value='Scatter plot (x,y variables)', options=[
+                            value='Heatmap (x,y variables)', options=[
                                 {'label': s, 'value': s}
                                 for s in chart_types
                             ])
@@ -284,7 +260,7 @@ dbc.Card(
                         html.Label([
                             dcc.Checklist(
                                 id='reverse_x_axis',
-                                options=[' Reserve x-axis'],
+                                options=[' Reverse x-axis'],
                                     value=['no']),
                                 
                         ],className = 'prepend-text')
@@ -294,8 +270,8 @@ dbc.Card(
                         html.Label([
                             dcc.Checklist(
                                 id='reverse_y_axis',
-                                options=[' Reserve y-axis'],
-                                    value=[' Reserve y-axis']),
+                                options=[' Reverse y-axis'],
+                                    value=[' Reverse y-axis']),
                             
                         ],className = 'prepend-text')
                     ],width='auto'),
@@ -313,10 +289,10 @@ dbc.Card(
                         dcc.Checklist(
                             id='season_selector',
                             options=[{'label': k, 'value': k} for k in seasonList],
-                            value=['spring','summer','autumn','winter'])
+                            value=['Spring','Summer','Autumn','Winter'])
 #                       dcc.RangeSlider(0, 20, 1, value=[5, 15], id='my-range-slider')
                         
-                    ],className='season-text')
+                    ],className='append-text')
                     
                     ]),
                     dbc.Col([
@@ -338,24 +314,30 @@ dbc.Card(
                 dbc.Row(children=[
                     html.Div(dcc.Graph(id='graph_new',style={'height': '400px'})),
                 ]),
+#               dbc.Row(children=[
+#                   html.Label([
+#                       'Collaborative tool development: Marc Pienaar, Erika Brown & Hayden Wilson'
+#                   ]),
+#                   
+#               ]),
             ],width=7)
         ]),
         dbc.Row(children=[
             dbc.Col([
                 html.Img(src=app.get_asset_url("NRFSAEON.jpg"), className='logo')
-            ],width='auto'),
+            ]),
             dbc.Col([
                 html.Img(src=app.get_asset_url("NMU.png"), className='logo')
-            ],width='auto'),
+            ]),
             dbc.Col([
                 html.Img(src=app.get_asset_url("CMR2.png"), className='logo')
-            ],width='auto'),
+            ]),
             dbc.Col([
                 html.Img(src=app.get_asset_url("CPUT.png"), className='logo')
-            ],width='auto'),
+            ]),
             dbc.Col([
                 html.Img(src=app.get_asset_url("GOAP.png"), className='logo')
-            ],width='auto'),
+            ]),
         ],align="center")
     ]),
     
@@ -466,21 +448,21 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
             parquet_file = pathlib.Path(__file__).parent / 'Data' / 'pelter8.parquet'
                         
 #       dq=pq.read_table(parquet_file,columns=['Date','Date2','season','iTime',str(input2),str(input3)])
-        dq=pq.read_table(parquet_file,filters=[('Temperature [ITS-90 deg C]', '>', -10),('Temperature [ITS-90 deg C]', '<', 30)])
+        dq=pq.read_table(parquet_file)#,filters=[('Temperature [ITS-90 deg C]', '>', -10),('Temperature [ITS-90 deg C]', '<', 30)])
         df=dq.to_pandas()
         #convert to datetime
         df['Date2'] = pd.to_datetime(df['Date2'], format='%Y-%m-%d').dt.date
 
         # Filter the Data by Season
         if len(input7) == 4:
-            df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1]) | (df['season'] == input7[2]) | (
-                df['season'] == input7[3])]
+            df = df.loc[(df['Season'] == input7[0]) | (df['Season'] == input7[1]) | (df['Season'] == input7[2]) | (
+                df['Season'] == input7[3])]
         elif len(input7) == 3:
-            df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1]) | (df['season'] == input7[2])]
+            df = df.loc[(df['Season'] == input7[0]) | (df['Season'] == input7[1]) | (df['Season'] == input7[2])]
         elif len(input7) == 2:
-            df = df.loc[(df['season'] == input7[0]) | (df['season'] == input7[1])]
+            df = df.loc[(df['Season'] == input7[0]) | (df['Season'] == input7[1])]
         else:
-            df = df.loc[(df['season'] == input7[0])]
+            df = df.loc[(df['Season'] == input7[0])]
         
         start_date_object = date.fromisoformat(date1)
         end_date_object = date.fromisoformat(date2)
@@ -501,16 +483,24 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
         
         
         
-        if input6 == 'Scatter plot (x,y variables)':
-            agg = cvs.points(df, x,y)
-            zero_mask = agg.values == 0
-            agg.values = np.log(agg.values, where=np.logical_not(zero_mask))
-            agg.values[zero_mask] = np.nan
+        if input6 == 'Heatmap (x,y variables)':
+#           categorizer = ds.category_binning('val', lower=10, upper=50, nbins=4, include_under=False, include_over=False)
             
-            fig = px.imshow(agg, origin='lower', color_continuous_scale='turbo',labels={'color':'Log(count)'})
+            agg = cvs.points(df, x,y)
+#           nonzero_values = agg.value[0::] > 0
+            
+#           agg = agg.values[nonzero_values]
+            zero_mask = agg.values == 0
+            
+#           print(agg.values[0])
+            agg.values = np.trunc(agg.values, where=np.logical_not(zero_mask))
+            agg.values[zero_mask]=np.nan
+#           agg.values[zero_mask] = np.nan
+#           
+            fig = px.imshow(agg, origin='lower', color_continuous_scale='turbo',labels={'color':'Count'})
             fig.update_traces(hoverongaps=False)
-            fig.update_layout(coloraxis_colorbar=dict(title='Log(n)'))
-            if input2 == 'ITime':
+            fig.update_layout(coloraxis_colorbar=dict(title='Count'))
+            if input2 == 'Integer Time':
                 fig.update_xaxes(
                     tickmode = 'array',
                     tickvals=datess_index,
@@ -523,9 +513,9 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
                 df, 
                 x=str(input2),
                 y="depth_class",
-                color="season",
+                color="Season",
                 color_discrete_map={ # replaces default color mapping by value
-                    "summer": "rgb(253,211,43)", "winter": "rgb(0,155,222)","autumn": "rgb(171,68,1)","spring": "rgb(151,189,25)"},
+                    "Summer": "rgb(253,211,43)", "Winter": "rgb(0,155,222)","Autumn": "rgb(171,68,1)","Spring": "rgb(151,189,25)"},
                 labels=dict(depth_class='Classed depth below surface (m)'),
             )
             
@@ -544,8 +534,10 @@ def update_figure(input1, input2, input3,input4,input5, input6,input7,date1,date
                 family="Times New Roman",
                     size=12
                 
-                )
+                ),
+            
         )
+#       fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)'})
         return fig
     except:
         raise PreventUpdate
